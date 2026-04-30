@@ -32,7 +32,7 @@ services:
       retries: 5
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - db_data:/var/lib/postgresql
+      - db_data:/var/lib/postgresql/data
     networks:
       - olga2_network
 
@@ -46,11 +46,7 @@ services:
       - olga2_network
 
   load-gen:
-    image: python:3.11-slim
-    command: >
-      sh -c "pip install requests && python /app/load_gen.py"
-    volumes:
-      - ./load-gen:/app
+    build: ./load-gen
     networks:
       - olga2_network
     depends_on:
@@ -64,6 +60,11 @@ services:
       - "9090:9090"
     networks:
       - olga2_network
+    deploy:
+      resouces:
+	limits:
+	  memory: 256M
+
 
   grafana:
     image: grafana/grafana:latest
@@ -81,6 +82,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     networks:
       - olga2_network
+    privileged: true
 
 
 volumes:

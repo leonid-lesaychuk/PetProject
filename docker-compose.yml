@@ -61,7 +61,7 @@ services:
     networks:
       - olga2_network
     deploy:
-      resouces:
+      resources:
         limits:
           memory: 256M
 

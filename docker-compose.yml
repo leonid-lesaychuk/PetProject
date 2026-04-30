@@ -1,0 +1,87 @@
+services:
+  web:
+    build: .
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      DB_HOST: db
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - olga2_network
+    restart:
+      always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: '64M'
+
+  db:
+    image: postgres:latest
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mydb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_data:/var/lib/postgresql
+    networks:
+      - olga2_network
+
+  nginx:
+    image:  nginx:alpine
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - olga2_network
+
+  load-gen:
+    image: python:3.11-slim
+    command: >
+      sh -c "pip install requests && python /app/load_gen.py"
+    volumes:
+      - ./load_test:/app
+    networks:
+      - olga2_network
+    depends_on:
+      - nginx
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - olga2_network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - olga2_network
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - olga2_network
+
+
+volumes:
+  db_data:
+
+networks:
+  olga2_network: {}

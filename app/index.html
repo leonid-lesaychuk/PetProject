@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Message Board</title>
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 50px auto; }
+        form { background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 30px; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+        .message { border-left: 4px solid #007bff; padding: 15px; margin: 15px 0; background: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>Message Board</h1>
+    
+    <form method="POST" action="/submit">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <textarea name="message" placeholder="Message" required></textarea>
+        <button type="submit">Post</button>
+    </form>
+    
+    <h2>Messages</h2>
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="message">
+                <strong>{{ msg.name }}</strong> ({{ msg.email }}) - {{ msg.created_at }}
+                <p>{{ msg.message }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No messages yet.</p>
+    {% endif %}
+</body>
+</html>

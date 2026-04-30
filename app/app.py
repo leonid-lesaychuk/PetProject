@@ -31,6 +31,9 @@ def init_db():
     cur.close()
     conn.close()
 
+init_db()
+
+
 @app.route('/')
 def index():
     conn = get_db_connection()

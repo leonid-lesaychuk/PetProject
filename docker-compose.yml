@@ -62,6 +62,8 @@ services:
     image: prom/prometheus:latest
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
     networks:
       - olga2_network
 

@@ -1,14 +1,13 @@
 global:
-  scrape_interval: 5s # Как часто забирать данные
+  scrape_interval: 5s
 
 scrape_configs:
   - job_name: 'flask_app'
-    static_configs:
-      - targets: ['web:5000']
+    metrics_path: '/metrics'
     dns_sd_configs:
       - names: ['web']
-      type: 'A'
-      port: 5000
+        type: 'A'
+        port: 5000
 
   - job_name: "cadvisor"
     static_configs:

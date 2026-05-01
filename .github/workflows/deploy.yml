@@ -2,13 +2,20 @@ name: Split Deploy (Infra & App)
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'infra-vm/**'
+      - 'app_vm/**'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 jobs:
   deploy-infra:
     name: Deploy Infrastructure
     runs-on: [self-hosted, infra]
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'infra-vm/')
+    if: |
+      github.event_name == 'workflow_dispatch' || 
+      any(github.event.head_commit.added, 'infra-vm/') ||
+      any(github.event.head_commit.modified, 'infra-vm/')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,7 +33,10 @@ jobs:
   deploy-app:
     name: Deploy Application
     runs-on: [self-hosted, app]
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'app_vm/')
+    if: |
+      github.event_name == 'workflow_dispatch' || 
+      any(github.event.head_commit.added, 'app_vm/') ||
+      any(github.event.head_commit.modified, 'app_vm/')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

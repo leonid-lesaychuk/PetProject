@@ -1,9 +1,6 @@
-x-сonfigs:
-  restart-policy: &restart-policy
-    restart: unless-stopped
-
 services:
   web:
+    restart: &restart-policy unless-stopped
     build:
       context: .
       dockerfile: ./app/Dockerfile
@@ -17,7 +14,6 @@ services:
         condition: service_healthy
     networks:
       - olga2_network
-    <<: *restart_policy
     deploy:
       resources:
         limits:
@@ -25,8 +21,8 @@ services:
           memory: '128M'
 
   db:
+    restart: *restart-policy
     image: postgres:latest
-    <<: *restart_policy
     env_file:
       - .env
     healthcheck:
@@ -41,8 +37,8 @@ services:
       - olga2_network
 
   nginx:
+    restart: *restart-policy
     build: ./nginx
-    <<: *restart-policy
     ports:
       - "80:80"
     depends_on:
@@ -51,16 +47,16 @@ services:
       - olga2_network
 
   load-gen:
+    restart: *restart-policy
     build: ./load-gen
-    <<: *restart-policy
     networks:
       - olga2_network
     depends_on:
       - nginx
 
   prometheus:
+    restart: *restart-policy
     image: prom/prometheus:latest
-    <<: *restart-policy
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
@@ -74,16 +70,16 @@ services:
 
 
   grafana:
+    restart: *restart-policy
     image: grafana/grafana:latest
-    <<: *restart-policy
     ports:
       - "3000:3000"
     networks:
       - olga2_network
 
   cadvisor:
+    restart: *restart-policy
     image: gcr.io/cadvisor/cadvisor:latest
-    <<: *restart-policy
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro

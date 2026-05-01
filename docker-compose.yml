@@ -74,6 +74,9 @@ services:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
+    volumes:
+      - ./monitoring/dashboards_provider.yml:/etc/grafana/provisioning/dashboards/provider.yml
+      - ./monitoring/dashboards:/etc/grafana/provisioning/dashboards
     networks:
       - olga2_network
 

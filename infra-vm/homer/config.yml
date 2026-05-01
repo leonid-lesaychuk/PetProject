@@ -1,0 +1,16 @@
+title: "PetProject"
+subtitle: "Dashboard"
+
+services:
+  - name: "Main"
+    icon: "fas fa-code-branch"
+    items:
+      - name: "Homer (Dashboard)"
+        icon: "fas fa-home"
+        subtitle: "Local Dashboard"
+        url: "http://:8080"
+
+      - name: "Google"
+        icon: "fab fa-google"
+        subtitle: "Search"
+        url: "https://google.com"

@@ -1,21 +1,41 @@
-name: Deploy to VM
+name: Split Deploy (Infra & App)
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
-    runs-on: self-hosted
+  deploy-infra:
+    name: Deploy Infrastructure
+    runs-on: [self-hosted, infra]
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'infra-vm/')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create .env file
+      - name: Create Infra .env
         run: |
-          echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+          echo "${{ secrets.INFRA_ENV_CONTENT }}" > infra-vm/.env
 
-      - name: Deploy Docker Compose
+      - name: Deploy Infra Stack
         run: |
-          docker compose up -d --build --scale web=5
-          docker compose restart prometheus nginx grafana
+          cd infra-vm
+          docker compose up -d --build
+          docker compose restart prometheus nginx grafana homer
+
+  deploy-app:
+    name: Deploy Application
+    runs-on: [self-hosted, app]
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'app_vm/')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create App .env
+        run: |
+          echo "${{ secrets.APP_ENV_CONTENT }}" > app_vm/.env
+
+      - name: Deploy App Stack
+        run: |
+          cd app_vm
+          docker compose up -d --build

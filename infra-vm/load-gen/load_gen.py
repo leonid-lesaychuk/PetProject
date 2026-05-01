@@ -13,7 +13,6 @@ def attack():
             pass
 
 if __name__ == "__main__":
-    # Запускаем 20 "хакеров" одновременно
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        for _ in range(10):
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        for _ in range(3):
             executor.submit(attack)

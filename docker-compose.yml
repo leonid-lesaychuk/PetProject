@@ -1,5 +1,6 @@
-x-restart-policy: &restart-policy
-  restart: unless-stopped
+x-onfigs:
+  restart-policy: &restart-policy
+    restart: unless-stopped
 
 services:
   web:

@@ -18,3 +18,4 @@ jobs:
       - name: Deploy Docker Compose
         run: |
           docker compose up -d --build --scale web=5
+          docker compose restart prometheus nginx grafana

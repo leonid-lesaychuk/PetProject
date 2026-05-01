@@ -1,4 +1,4 @@
-x-onfigs:
+x-сonfigs:
   restart-policy: &restart-policy
     restart: unless-stopped
 

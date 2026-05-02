@@ -24,8 +24,7 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
-    networks:
-      - olga2_network
     privileged: true
     ports:
       - "8081:8080"
+

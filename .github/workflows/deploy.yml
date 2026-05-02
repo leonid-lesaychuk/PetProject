@@ -1,28 +1,40 @@
 name: Split Deploy (Infra & App)
+
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'infra-vm/**'
-      - 'app_vm/**'
-      - '.github/workflows/**'
-  workflow_dispatch:
+  workflow_dispatch: # Позволяет запускать вручную
 
 jobs:
+  # ЭТАП 1: Проверяем, в каких папках были изменения
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      infra: ${{ steps.filter.outputs.infra }}
+      app: ${{ steps.filter.outputs.app }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            infra:
+              - 'infra-vm/**'
+            app:
+              - 'app_vm/**'
+
+  # ЭТАП 2: Деплой Инфраструктуры
   deploy-infra:
+    needs: changes
+    if: ${{ needs.changes.outputs.infra == 'true' || github.event_name == 'workflow_dispatch' }}
     name: Deploy Infrastructure
     runs-on: [self-hosted, infra]
-    if: |
-      github.event_name == 'workflow_dispatch' || 
-      any(github.event.head_commit.added, 'infra-vm/') ||
-      any(github.event.head_commit.modified, 'infra-vm/')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Create Infra .env
-        run: |
-          echo "${{ secrets.INFRA_ENV_CONTENT }}" > infra-vm/.env
+        run: echo "${{ secrets.INFRA_ENV_CONTENT }}" > infra-vm/.env
 
       - name: Deploy Infra Stack
         run: |
@@ -30,20 +42,18 @@ jobs:
           docker compose up -d --build
           docker compose restart prometheus nginx grafana homer
 
+  # ЭТАП 3: Деплой Приложения
   deploy-app:
+    needs: changes
+    if: ${{ needs.changes.outputs.app == 'true' || github.event_name == 'workflow_dispatch' }}
     name: Deploy Application
     runs-on: [self-hosted, app]
-    if: |
-      github.event_name == 'workflow_dispatch' || 
-      any(github.event.head_commit.added, 'app_vm/') ||
-      any(github.event.head_commit.modified, 'app_vm/')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Create App .env
-        run: |
-          echo "${{ secrets.APP_ENV_CONTENT }}" > app_vm/.env
+        run: echo "${{ secrets.APP_ENV_CONTENT }}" > app_vm/.env
 
       - name: Deploy App Stack
         run: |

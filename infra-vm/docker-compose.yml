@@ -57,6 +57,7 @@ services:
     volumes:
       - ./monitoring/dashboards_provider.yml:/etc/grafana/provisioning/dashboards/provider.yml
       - ./monitoring/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
     networks:
       - olga2_network
 

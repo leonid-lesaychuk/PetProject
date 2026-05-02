@@ -3,9 +3,25 @@ from prometheus_flask_exporter import PrometheusMetrics
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
-
+import logging
+impost sys
 import os
-print(os.environ['DATABASE_URL']) 
+
+
+# Настройка логирования в консоль (STDOUT)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+logger = logging.getLogger(__name__)
+
+# Пример использования в функции submit
+@app.route('/submit', methods=['POST'])
+def submit():
+    name = request.form.get('name')
+    logger.info(f"Received submission from {name}") # Теперь это попадет в Loki
+
 
 app = Flask(__name__)
 metrics = PrometheusMetrics(app) 

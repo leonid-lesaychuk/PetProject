@@ -6,7 +6,6 @@ on:
   workflow_dispatch: # Позволяет запускать вручную
 
 jobs:
-  # ЭТАП 1: Проверяем, в каких папках были изменения
   changes:
     runs-on: ubuntu-latest
     outputs:
@@ -17,11 +16,15 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
+          # initial: true заставит фильтр сработать как 'true', если это самый первый запуск
+          initial: true 
           filters: |
             infra:
               - 'infra-vm/**'
+              - '.github/workflows/**'
             app:
               - 'app_vm/**'
+              - '.github/workflows/**'
 
   # ЭТАП 2: Деплой Инфраструктуры
   deploy-infra:

@@ -16,7 +16,7 @@ services:
           cpus: '0.2'
           memory: '256M'
 
-    cadvisor:
+  cadvisor:
     restart: *restart-policy
     image: gcr.io/cadvisor/cadvisor:latest
     volumes:

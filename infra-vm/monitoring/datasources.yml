@@ -7,3 +7,4 @@ datasources:
     url: http://prometheus:9090
     isDefault: true
     editable: true
+    uid: dfkr9ea09p5a8d

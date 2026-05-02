@@ -1,9 +1,9 @@
 FROM python:3.11-slim
 WORKDIR /app
-COPY app/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY app/index.html /app/templates/
-COPY app/app.py /app
+COPY index.html /app/templates/
+COPY app.py /app
 RUN mkdir -p /home/app
 RUN useradd app && chown -R app:app /app /home/app
 USER app

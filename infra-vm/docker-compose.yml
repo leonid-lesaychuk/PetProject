@@ -23,8 +23,6 @@ services:
     build: ./nginx
     ports:
       - "80:80"
-    depends_on:
-      - web
     networks:
       - olga2_network
 

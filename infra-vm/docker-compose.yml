@@ -61,18 +61,6 @@ services:
     networks:
       - olga2_network
 
-  cadvisor:
-    restart: *restart-policy
-    image: gcr.io/cadvisor/cadvisor:latest
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    networks:
-      - olga2_network
-    privileged: true
-
   homer:
     image: b4bz/homer:latest
     container_name: homer

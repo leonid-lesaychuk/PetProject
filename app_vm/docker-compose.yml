@@ -15,3 +15,17 @@ services:
         limits:
           cpus: '0.2'
           memory: '256M'
+
+    cadvisor:
+    restart: *restart-policy
+    image: gcr.io/cadvisor/cadvisor:latest
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - olga2_network
+    privileged: true
+    ports:
+      - "8081:8080"

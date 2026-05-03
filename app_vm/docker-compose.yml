@@ -36,7 +36,7 @@ services:
       - REPO_URL=https://github.com/leonid-lesaychuk/PetProject
       - RUNNER_TOKEN=${RUNNER_TOKEN}
       - RUNNER_NAME=infra-runner
-      - LABELS=infra
+      - LABELS=${LABELS}
       - RUNNER_WORKDIR=/_work
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

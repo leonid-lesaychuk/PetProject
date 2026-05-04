@@ -28,20 +28,3 @@ services:
     ports:
       - "8081:8080"
 
-  github-runner:
-    image: myoung34/github-runner:latest
-    container_name: github-runner
-    restart: always
-    environment:
-      - REPO_URL=https://github.com/leonid-lesaychuk/PetProject
-      - RUNNER_TOKEN=${RUNNER_TOKEN}
-      - RUNNER_NAME=infra-runner
-      - LABELS=${LABELS}
-      - RUNNER_WORKDIR=/_work
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /_work:/_work
-      - runner_data:/home/runner
-
-volumes:
-  runner_data:

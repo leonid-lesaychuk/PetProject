@@ -18,21 +18,6 @@ services:
     networks:
       - olga2_network
 
-  github-runner:
-    image: myoung34/github-runner:latest
-    container_name: github-runner
-    restart: always
-    environment:
-      - REPO_URL=https://github.com/leonid-lesaychuk/PetProject
-      - RUNNER_TOKEN=${RUNNER_TOKEN}
-      - RUNNER_NAME=infra-runner
-      - LABELS=${LABELS}
-      - RUNNER_WORKDIR=/_work
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /_work:/_work
-      - runner_data:/home/runner
-
   nginx:
     restart: *restart-policy
     build: ./nginx
@@ -98,7 +83,6 @@ services:
 volumes:
   db_data:
   loki_data:
-  runner_data:
 
 networks:
   olga2_network: {}

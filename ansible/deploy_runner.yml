@@ -1,0 +1,32 @@
+- name: Deploy GitHub Runner
+  hosts: all
+  become: true
+  vars_files:
+    - vars/secrets.yml
+  tasks:
+    - name: Install Docker SDK for Python
+      apt:
+        name: python3-docker
+        state: present
+
+    - name: Ensure runner directory exists
+      file:
+        path: /opt/github-runner
+        state: directory
+        mode: '0755'
+
+    - name: Create .env file from template
+      template:
+        src: templates/runner.env.j2
+        dest: /opt/github-runner/.env
+        mode: '0600' # Секретный файл видит только владелец
+
+    - name: Run GitHub Runner container (CLI version)
+      shell: |
+        docker rm -f github-runner || true
+        docker run -d \
+          --name github-runner \
+          --restart always \
+          --env-file /opt/github-runner/.env \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          myoung34/github-runner:latest

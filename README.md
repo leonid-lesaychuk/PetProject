@@ -69,6 +69,9 @@ RUNNER_NAME={{ inventory_hostname }}-runner
 REPO_URL=
 ACCESS_TOKEN={{ github_access_token }}
 RUNNER_CLEANUP_SIGTERM=true
+RUNNER_REPLACE_EXISTING=true
+LABELS={% if 'app' in group_names %}app{% else %}infra{% endif %},self-hosted
+RUNNER_LABELS={% if 'app' in group_names %}app{% else %}infra{% endif %},self-hosted
 
 # Создать плейбук ansible deploy_runner.yml
 touch ansible/deploy_runner.yml

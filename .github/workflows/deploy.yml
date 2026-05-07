@@ -16,8 +16,6 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
-          # initial: true заставит фильтр сработать как 'true', если это самый первый запуск
-          initial: true 
           filters: |
             infra:
               - 'infra-vm/**'

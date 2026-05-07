@@ -99,7 +99,7 @@ touch ansible/deploy_runner.yml
         dest: /opt/github-runner/.env
         mode: '0600' # Секретный файл видит только владелец
 
-    - name: Run GitHub Runner container (CLI version)
+    - name: Run GitHub Runner container
       shell: |
         docker rm -f github-runner || true
         docker run -d \
@@ -107,6 +107,8 @@ touch ansible/deploy_runner.yml
           --restart always \
           --env-file /opt/github-runner/.env \
           -v /var/run/docker.sock:/var/run/docker.sock \
+          # Монтируем корень в корень, чтобы пути совпали
+          -v /opt/github-runner/work:/_work \ 
           myoung34/github-runner:latest
 
 # Запустить плейбук для деплоя раннеров из директории ansible

@@ -65,24 +65,12 @@ services:
     container_name: loki
     ports:
       - "3100:3100"
-    volumes:
-      - ./monitoring/loki/loki-config.yaml:/etc/loki/local-config.yaml
-      - ./loki/data:/loki
     command: -config.file=/etc/loki/local-config.yaml
     restart: *restart-policy
 
-  homer:
-    image: b4bz/homer:latest
-    container_name: homer
-    volumes:
-      - ./homer:/www/assets
-    ports:
-      - '8080:8081'
-    restart: *restart-policy
 
 volumes:
   db_data:
-  loki_data:
 
 networks:
   olga2_network: {}

@@ -21,7 +21,7 @@
         dest: /opt/github-runner/.env
         mode: '0600' # Секретный файл видит только владелец
 
-    - name: Run GitHub Runner container (CLI version)
+    - name: Run GitHub Runner container
       shell: |
         docker rm -f github-runner || true
         docker run -d \
@@ -29,4 +29,5 @@
           --restart always \
           --env-file /opt/github-runner/.env \
           -v /var/run/docker.sock:/var/run/docker.sock \
+          -v /opt/github-runner/work:/_work \ 
           myoung34/github-runner:latest
